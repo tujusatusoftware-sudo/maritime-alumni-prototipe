@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CABM Digital Connect - Maritime Alumni Network</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            800: '#0f2b48',
+                            900: '#0b1d33',
+                            950: '#06101e'
+                        },
+                        maritime: {
+                            blue: '#0066cc',
+                            light: '#e6f0fa',
+                            sky: '#0284c7'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Outfit', 'Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Lucide Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        h1, h2, h3, h4, .font-display {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .menu-active-anim {
+            animation: pulseGlow 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(0.97); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); }
+            50% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+
+        .fade-in-slide {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-blue-600 selection:text-white flex flex-col min-h-screen">
+
+    <!-- ================= 0. DEMO ROLE SWITCHER TOP BAR ================= -->
+    <div class="bg-amber-500 text-slate-950 text-xs font-bold py-2 px-4 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="sliders" class="w-4 h-4"></i>
+                <span class="uppercase tracking-wider">Demo Control Panel: Pilih Peran Tampilan Dashboard</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+                <button onclick="switchRole('public')" id="btn-role-public" class="role-btn px-3 py-1 rounded-lg bg-slate-950 text-white shadow transition">🌐 Public Web Showcase</button>
+                <button onclick="switchRole('alumni')" id="btn-role-alumni" class="role-btn px-3 py-1 rounded-lg bg-white/40 hover:bg-white/70 text-slate-900 transition">👤 Alumni Dashboard</button>
+                <button onclick="switchRole('company')" id="btn-role-company" class="role-btn px-3 py-1 rounded-lg bg-white/40 hover:bg-white/70 text-slate-900 transition">🏢 Company Dashboard</button>
+                <button onclick="switchRole('admin')" id="btn-role-admin" class="role-btn px-3 py-1 rounded-lg bg-white/40 hover:bg-white/70 text-slate-900 transition">🛡️ Admin Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 1. TOP ANNOUNCEMENT BAR ================= -->
+    <div class="bg-navy-950 text-slate-300 text-xs py-2 px-4 md:px-8 border-b border-slate-800 font-medium">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-6">
+                <span class="tracking-wide">Selamat datang di Maritime Alumni Network</span>
+                <span class="hidden md:inline text-slate-700">|</span>
+                <a href="mailto:info@maritimealumni.id" class="hidden md:flex items-center hover:text-white transition">
+                    <i data-lucide="mail" class="w-3.5 h-3.5 mr-1.5 text-blue-400"></i> info@maritimealumni.id
+                </a>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <a href="#" class="hover:text-blue-400 transition p-1"><i data-lucide="facebook" class="w-3.5 h-3.5"></i></a>
+                <a href="#" class="hover:text-blue-400 transition p-1"><i data-lucide="linkedin" class="w-3.5 h-3.5"></i></a>
+                <a href="#" class="hover:text-blue-400 transition p-1"><i data-lucide="youtube" class="w-3.5 h-3.5"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 2. MAIN HEADER & DYNAMIC NAVIGATION ================= -->
+    <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-8 z-40 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 py-3.5 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" onclick="switchRole('public'); return false;" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/30 group-hover:rotate-12 transition duration-300">
+                    <i data-lucide="anchor" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-base tracking-tight leading-none text-navy-900 block font-display">Maritime Alumni Network</span>
+                    <span class="text-[10px] text-blue-600 font-bold uppercase tracking-widest mt-0.5 block">Terhubung • Berkembang • Berdampak</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links (Dynamic by JS) -->
+            <nav id="nav-links" class="hidden lg:flex items-center space-x-6 text-xs font-bold text-slate-700 font-display">
+                <!-- Nav items inserted by JS depending on role -->
+            </nav>
+
+            <!-- Action Buttons (Dynamic by JS) -->
+            <div id="nav-actions" class="flex items-center space-x-3">
+                <!-- Action buttons inserted by JS -->
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow">
+
+        <!-- ================================================================= -->
+        <!-- VIEW 1: PUBLIC FRONTEND SHOWCASE (EXACT MATCH WITH MAIN REF FILE) -->
+        <!-- ================================================================= -->
+        <div id="view-public" class="role-view fade-in-slide">
+            
+            <!-- Hero Banner Maritim -->
+            <section class="relative bg-gradient-to-r from-navy-950 via-navy-900 to-blue-900 text-white min-h-[420px] flex items-center overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=1600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-overlay" alt="Maritime Ship Hero">
+                <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl"></div>
+
+                <div class="max-w-7xl mx-auto px-4 md:px-8 py-12 relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div class="max-w-2xl space-y-4">
+                        <div class="inline-flex items-center space-x-2 bg-blue-500/20 border border-blue-400/30 px-3 py-1 rounded-full text-blue-300 text-xs font-bold tracking-wide">
+                            <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+                            <span>MARITIME ALUMNI NETWORK</span>
+                        </div>
+                        <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight font-display">
+                            Satu Alumni, Banyak Peluang,<br>
+                            <span class="text-blue-400">Satu Laut, Satu Keluarga.</span>
+                        </h1>
+                        <p class="text-slate-300 text-sm md:text-base leading-relaxed max-w-xl font-normal">
+                            Platform alumni pelayaran untuk silaturahmi, karier, pengembangan diri, berbagi ilmu, dan pengelolaan organisasi secara profesional.
+                        </p>
+                        <div class="pt-2 flex flex-wrap gap-3">
+                            <a href="#fitur-utama" onclick="animateMenuItem(this)" class="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-6 py-3 rounded-xl shadow-lg shadow-blue-900/50 transition transform hover:-translate-y-0.5">
+                                <span>Jelajahi Platform</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </a>
+                            <button onclick="openModal('modal-register')" class="inline-flex items-center space-x-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-extrabold px-6 py-3 rounded-xl transition">
+                                <i data-lucide="user-plus" class="w-4 h-4 text-amber-400"></i>
+                                <span>Registrasi Akun</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Floating Hero Quote Badge -->
+                    <div class="hidden lg:block bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl max-w-xs text-right shadow-2xl">
+                        <p class="text-xl font-serif italic text-blue-200 font-light leading-snug">
+                            "Dari Laut, Untuk Laut, Bersama Membangun Masa Depan."
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grid 7 Fitur Utama -->
+            <section id="fitur-utama" class="max-w-7xl mx-auto px-4 md:px-8 -mt-8 relative z-20">
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+                    
+                    <a href="#" onclick="clickImportantMenu(this, 'Direktori Alumni'); switchRole('alumni'); return false;" class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-md hover:shadow-xl hover:border-blue-500 transition-all duration-300 group text-center flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition">
+                            <i data-lucide="users" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-xs text-slate-800">Direktori Alumni</h3>
+                        <p class="text-[10px] text-slate-500 mt-1 font-medium">Cari dan temukan alumni</p>
+                    </a>
+
+                    <a href="#" onclick="clickImportantMenu(this, 'Komunitas & Forum'); return false;" class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-md hover:shadow-xl hover:border-blue-500 transition-all duration-300 group text-center flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition">
+                            <i data-lucide="message-square" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-xs text-slate-800">Komunitas & Forum</h3>
+                        <p class="text-[10px] text-slate-500 mt-1 font-medium">Diskusi dan berbagi pengalaman</p>
+                    </a>
+
+                    <a href="#" onclick="clickImportantMenu(this, 'Karier & Job Board'); switchRole('company'); return false;" class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-md hover:shadow-xl hover:border-blue-500 transition-all duration-300 group text-center flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition">
+                            <i data-lucide="briefcase" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-xs text-slate-800">Karier & Job Board</h3>
+                        <p class="text-[10px] text-slate-500 mt-1 font-medium">Peluang kerja dan rekrutmen</p>
+                    </a>
+
+                    <a href="#knowledge-section" onclick="clickImportantMenu(this, 'Knowledge Sharing'); return false;" class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-md hover:shadow-xl hover:border-blue-500 transition-all duration-300 group text-center flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition">
+                            <i data-lucide="book-open" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-xs text-slate-800">Knowledge Sharing</h3>
+                        <p class="text-[10px] text-slate-500 mt-1 font-medium">Artikel, tips, dan wawasan</p>
+                    </a>
+
+                    <a href="#pengumuman-section" onclick="clickImportantMenu(this, 'Kegiatan & Reuni'); return false;" class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-md hover:shadow-xl hover:border-blue-500 transition-all duration-300 group text-center flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition">
+                            <i data-lucide="calendar" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-xs text-slate-800">Kegiatan & Reuni</h3>
+                        <p class="text-[10px] text-slate-500 mt-1 font-medium">Event, seminar dan pertemuan</p>
+                    </a>
+
+                    <a href="#" onclick="clickImportantMenu(this, 'Donasi & Beasiswa'); return false;" class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-md hover:shadow-xl hover:border-blue-500 transition-all duration-300 group text-center flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition">
+                            <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-xs text-slate-800">Donasi & Beasiswa</h3>
+                        <p class="text-[10px] text-slate-500 mt-1 font-medium">Dukung pendidikan dan sosial</p>
+                    </a>
+
+                    <a href="#" onclick="clickImportantMenu(this, 'Keuangan Alumni'); switchRole('alumni'); return false;" class="bg-white p-4 rounded-xl border border-blue-300 ring-2 ring-blue-500/20 shadow-md hover:shadow-xl transition-all duration-300 group text-center flex flex-col items-center col-span-2 sm:col-span-1">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition">
+                            <i data-lucide="wallet" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-xs text-slate-800">Keuangan Alumni</h3>
+                        <p class="text-[10px] text-slate-500 mt-1 font-medium">Kelola kas & laporan keuangan</p>
+                    </a>
+
+                </div>
+            </section>
+
+            <!-- Berita, Pengumuman & Informasi Penting -->
+            <section id="berita-section" class="max-w-7xl mx-auto px-4 md:px-8 py-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Berita Terkini Active Slider Feature Card -->
+                    <div class="lg:col-span-5 relative rounded-2xl overflow-hidden shadow-lg group min-h-[360px] flex flex-col justify-end p-6 text-white border border-slate-200">
+                        <img id="newsSliderImg" src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80" class="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out" alt="Ship Bridge">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/70 to-transparent"></div>
+                        
+                        <div class="relative z-10 space-y-2 fade-in-slide" id="newsContentContainer">
+                            <span id="newsTag" class="bg-blue-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider">BERITA TERKINI</span>
+                            <h3 id="newsTitle" class="text-xl font-extrabold leading-tight tracking-tight font-display">Alumni Pelayaran Indonesia Tunjukkan Peran Strategis di Industri Global</h3>
+                            <p id="newsDesc" class="text-xs text-slate-300 line-clamp-2 font-normal leading-relaxed">Kisah inspiratif para alumni yang kini berkarier di perusahaan pelayaran terkemuka dunia, membuktikan bahwa pendidikan maritim membuka banyak peluang.</p>
+                            
+                            <div class="pt-3 flex items-center justify-between">
+                                <a href="#" onclick="showToast('Membaca berita selengkapnya...'); return false;" class="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center">
+                                    Baca Selengkapnya <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-1"></i>
+                                </a>
+                                <!-- Slider Navigation Dots -->
+                                <div class="flex items-center space-x-2">
+                                    <div class="flex space-x-1 mr-2">
+                                        <span onclick="setNewsSlide(0)" id="dot-0" class="w-2 h-2 rounded-full bg-blue-500 cursor-pointer transition-all"></span>
+                                        <span onclick="setNewsSlide(1)" id="dot-1" class="w-2 h-2 rounded-full bg-white/40 cursor-pointer transition-all"></span>
+                                        <span onclick="setNewsSlide(2)" id="dot-2" class="w-2 h-2 rounded-full bg-white/40 cursor-pointer transition-all"></span>
+                                    </div>
+                                    <button onclick="prevNewsSlide()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-blue-600 flex items-center justify-center text-white transition active:scale-90"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                                    <button onclick="nextNewsSlide()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-blue-600 flex items-center justify-center text-white transition active:scale-90"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pengumuman & Kegiatan -->
+                    <div id="pengumuman-section" class="lg:col-span-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
+                                <h3 class="font-bold text-slate-900 text-sm font-display">Pengumuman & Kegiatan</h3>
+                                <a href="#" onclick="showToast('Membuka daftar semua kegiatan'); return false;" class="text-xs text-blue-600 hover:underline font-semibold">Lihat Semua &rarr;</a>
+                            </div>
+
+                            <div class="space-y-3">
+                                <div onclick="clickImportantMenu(this, 'Event Reuni Akbar 2025')" class="flex items-start space-x-3 p-2.5 bg-slate-50 hover:bg-blue-50/50 cursor-pointer transition rounded-xl border border-slate-100">
+                                    <div class="w-12 h-12 rounded-lg bg-blue-600 text-white flex flex-col items-center justify-center shrink-0 font-extrabold font-display">
+                                        <span class="text-base leading-none">15</span>
+                                        <span class="text-[9px] uppercase tracking-wider">Nov</span>
+                                    </div>
+                                    <div class="text-xs">
+                                        <h4 class="font-bold text-slate-900 font-display">Reuni Akbar Alumni 2025</h4>
+                                        <p class="text-[11px] text-slate-500 mt-0.5"><i data-lucide="map-pin" class="w-3 h-3 inline"></i> Hotel Grand Marina, Jakarta</p>
+                                        <p class="text-[11px] text-slate-600 mt-1">Saatnya kita bertemu, berbagi cerita dan memperkuat jaringan.</p>
+                                    </div>
+                                </div>
+
+                                <div onclick="clickImportantMenu(this, 'Webinar Career Shipping')" class="flex items-start space-x-3 p-2.5 bg-slate-50 hover:bg-blue-50/50 cursor-pointer transition rounded-xl border border-slate-100">
+                                    <div class="w-12 h-12 rounded-lg bg-navy-800 text-white flex flex-col items-center justify-center shrink-0 font-extrabold font-display">
+                                        <span class="text-base leading-none">28</span>
+                                        <span class="text-[9px] uppercase tracking-wider">Nov</span>
+                                    </div>
+                                    <div class="text-xs">
+                                        <h4 class="font-bold text-slate-900 font-display">Webinar: Career in Global Shipping</h4>
+                                        <p class="text-[11px] text-slate-500 mt-0.5"><i data-lucide="video" class="w-3 h-3 inline"></i> Online (Zoom)</p>
+                                        <p class="text-[11px] text-slate-600 mt-1">Peluang karier di perusahaan pelayaran internasional.</p>
+                                    </div>
+                                </div>
+
+                                <div onclick="clickImportantMenu(this, 'Pelatihan IMO')" class="flex items-start space-x-3 p-2.5 bg-slate-50 hover:bg-blue-50/50 cursor-pointer transition rounded-xl border border-slate-100">
+                                    <div class="w-12 h-12 rounded-lg bg-sky-600 text-white flex flex-col items-center justify-center shrink-0 font-extrabold font-display">
+                                        <span class="text-base leading-none">12</span>
+                                        <span class="text-[9px] uppercase tracking-wider">Des</span>
+                                    </div>
+                                    <div class="text-xs">
+                                        <h4 class="font-bold text-slate-900 font-display">Pelatihan Sertifikasi IMO</h4>
+                                        <p class="text-[11px] text-slate-500 mt-0.5"><i data-lucide="map-pin" class="w-3 h-3 inline"></i> Surabaya</p>
+                                        <p class="text-[11px] text-slate-600 mt-1">Peningkatan kompetensi untuk masa depan.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="#" onclick="showToast('Menampilkan seluruh agenda'); return false;" class="text-xs font-bold text-blue-600 hover:underline block text-center pt-2">Lihat Semua Kegiatan &rarr;</a>
+                    </div>
+
+                    <!-- Informasi Penting -->
+                    <div class="lg:col-span-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between space-y-3">
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm mb-3 border-b border-slate-100 pb-2 font-display">Informasi Penting</h3>
+
+                            <div class="space-y-2.5 text-xs">
+                                <a href="#" onclick="clickImportantMenu(this, 'Panduan Pendaftaran'); openModal('modal-register'); return false;" class="flex items-start space-x-2.5 p-2 rounded-lg hover:bg-blue-50 transition border border-transparent hover:border-blue-200">
+                                    <i data-lucide="file-text" class="w-4 h-4 text-blue-600 shrink-0 mt-0.5"></i>
+                                    <div>
+                                        <p class="font-bold text-slate-800">Panduan Pendaftaran Alumni</p>
+                                        <p class="text-[10px] text-slate-500">Cara registrasi & verifikasi akun</p>
+                                    </div>
+                                </a>
+
+                                <a href="#" onclick="clickImportantMenu(this, 'Validasi Alumni'); switchRole('admin'); return false;" class="flex items-start space-x-2.5 p-2 rounded-lg hover:bg-blue-50 transition border border-transparent hover:border-blue-200">
+                                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                    <div>
+                                        <p class="font-bold text-slate-800">Validasi Alumni</p>
+                                        <p class="text-[10px] text-slate-500">Status pendaftaran Anda</p>
+                                    </div>
+                                </a>
+
+                                <a href="#" onclick="clickImportantMenu(this, 'Pengumuman Terbaru'); return false;" class="flex items-start space-x-2.5 p-2 rounded-lg hover:bg-blue-50 transition border border-transparent hover:border-blue-200">
+                                    <i data-lucide="bell" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
+                                    <div>
+                                        <p class="font-bold text-slate-800">Pengumuman Terbaru</p>
+                                        <p class="text-[10px] text-slate-500">Link, penting, pengumuman</p>
+                                    </div>
+                                </a>
+
+                                <a href="#" onclick="clickImportantMenu(this, 'Kontak Admin'); toggleChatWindow(); return false;" class="flex items-start space-x-2.5 p-2 rounded-lg hover:bg-blue-50 transition border border-transparent hover:border-blue-200">
+                                    <i data-lucide="help-circle" class="w-4 h-4 text-purple-600 shrink-0 mt-0.5"></i>
+                                    <div>
+                                        <p class="font-bold text-slate-800">Kontak Admin</p>
+                                        <p class="text-[10px] text-slate-500">Bantuan dan informasi lebih lanjut</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp Help Box -->
+                        <a href="#" onclick="toggleChatWindow(); return false;" class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs text-emerald-900 hover:bg-emerald-100 transition">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="message-circle" class="w-5 h-5 text-emerald-600"></i>
+                                <div>
+                                    <p class="font-bold">Ada pertanyaan?</p>
+                                    <p class="text-[10px] text-emerald-700">Hubungi kami via WhatsApp</p>
+                                </div>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-emerald-600"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Profil Alumni Showcase Grid -->
+            <section class="bg-white py-12 border-y border-slate-200">
+                <div class="max-w-7xl mx-auto px-4 md:px-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-xl font-extrabold text-slate-900 tracking-tight font-display">Profil Alumni</h2>
+                            <p class="text-xs text-slate-500 font-medium">Jelajahi profil alumni yang tersebar di berbagai perusahaan pelayaran terkemuka.</p>
+                        </div>
+                        <a href="#" onclick="switchRole('alumni'); return false;" class="text-xs text-blue-600 hover:underline font-semibold">Lihat Semua Alumni &rarr;</a>
+                    </div>
+
+                    <!-- Alumni Cards Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                        
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center flex flex-col items-center hover:shadow-md transition">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="w-16 h-16 rounded-full object-cover mb-3 border-2 border-blue-500 shadow-sm" alt="Budi Santoso">
+                            <h3 class="font-bold text-xs text-slate-900">Budi Santoso</h3>
+                            <p class="text-[10px] text-blue-600 font-bold mt-0.5">Marine Superintendent</p>
+                            <p class="text-[10px] text-slate-500 font-medium">PT. Pertamina International Shipping</p>
+                            <span class="text-[9px] bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded-full mt-2">Angkatan 2010</span>
+                            <button onclick="clickImportantMenu(this, 'Profil Budi Santoso'); switchRole('alumni');" class="mt-3 w-full py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-lg border border-blue-200 transition">Pelajari</button>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center flex flex-col items-center hover:shadow-md transition">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80" class="w-16 h-16 rounded-full object-cover mb-3 border-2 border-blue-500 shadow-sm" alt="Siti Rahma">
+                            <h3 class="font-bold text-xs text-slate-900">Siti Rahma</h3>
+                            <p class="text-[10px] text-blue-600 font-bold mt-0.5">Fleet Manager</p>
+                            <p class="text-[10px] text-slate-500 font-medium">MOL Indonesia</p>
+                            <span class="text-[9px] bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded-full mt-2">Angkatan 2012</span>
+                            <button onclick="clickImportantMenu(this, 'Profil Siti Rahma'); switchRole('alumni');" class="mt-3 w-full py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-lg border border-blue-200 transition">Pelajari</button>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center flex flex-col items-center hover:shadow-md transition">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" class="w-16 h-16 rounded-full object-cover mb-3 border-2 border-blue-500 shadow-sm" alt="Andi Wijaya">
+                            <h3 class="font-bold text-xs text-slate-900">Andi Wijaya</h3>
+                            <p class="text-[10px] text-blue-600 font-bold mt-0.5">Master Mariner</p>
+                            <p class="text-[10px] text-slate-500 font-medium">PT. Bukit Maritim</p>
+                            <span class="text-[9px] bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded-full mt-2">Angkatan 2011</span>
+                            <button onclick="clickImportantMenu(this, 'Profil Andi Wijaya'); switchRole('alumni');" class="mt-3 w-full py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-lg border border-blue-200 transition">Pelajari</button>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center flex flex-col items-center hover:shadow-md transition">
+                            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80" class="w-16 h-16 rounded-full object-cover mb-3 border-2 border-blue-500 shadow-sm" alt="Rina Martina">
+                            <h3 class="font-bold text-xs text-slate-900">Rina Martina</h3>
+                            <p class="text-[10px] text-blue-600 font-bold mt-0.5">Operation Manager</p>
+                            <p class="text-[10px] text-slate-500 font-medium">PT. Logindo Samudra</p>
+                            <span class="text-[9px] bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded-full mt-2">Angkatan 2013</span>
+                            <button onclick="clickImportantMenu(this, 'Profil Rina Martina'); switchRole('alumni');" class="mt-3 w-full py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-lg border border-blue-200 transition">Pelajari</button>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center flex flex-col items-center hover:shadow-md transition">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80" class="w-16 h-16 rounded-full object-cover mb-3 border-2 border-blue-500 shadow-sm" alt="Agus Pratama">
+                            <h3 class="font-bold text-xs text-slate-900">Agus Pratama</h3>
+                            <p class="text-[10px] text-blue-600 font-bold mt-0.5">Technical Superintendent</p>
+                            <p class="text-[10px] text-slate-500 font-medium">PT. Meratus Line</p>
+                            <span class="text-[9px] bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded-full mt-2">Angkatan 2009</span>
+                            <button onclick="clickImportantMenu(this, 'Profil Agus Pratama'); switchRole('alumni');" class="mt-3 w-full py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-lg border border-blue-200 transition">Pelajari</button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Knowledge Sharing / Artikel Grid -->
+            <section id="knowledge-section" class="max-w-7xl mx-auto px-4 md:px-8 py-12">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-xl font-extrabold text-slate-900 tracking-tight font-display">Knowledge Sharing</h2>
+                        <p class="text-xs text-slate-500 font-medium">Berbagi ilmu, pengalaman dan informasi bermanfaat dari alumni dan pengurus.</p>
+                    </div>
+                    <a href="#" onclick="showToast('Membuka koleksi artikel knowledge sharing'); return false;" class="text-xs text-blue-600 hover:underline font-semibold">Lihat Semua Artikel &rarr;</a>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <img src="https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=400&q=80" class="w-full h-36 object-cover" alt="Article Image">
+                            <div class="p-4 space-y-2">
+                                <span class="bg-blue-100 text-blue-700 text-[9px] font-extrabold px-2 py-0.5 rounded">Karier</span>
+                                <h3 class="font-bold text-xs text-slate-900 leading-snug font-display">Tips Sukses Mengikuti Interview di Perusahaan Pelayaran Global</h3>
+                                <p class="text-[10px] text-slate-400 font-medium"><i data-lucide="clock" class="w-3 h-3 inline"></i> 12 Okt 2025</p>
+                            </div>
+                        </div>
+                        <div class="p-4 pt-0">
+                            <a href="#" onclick="showToast('Membaca artikel karier'); return false;" class="text-xs font-bold text-blue-600 hover:underline">Baca Selengkapnya &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80" class="w-full h-36 object-cover" alt="Article Image">
+                            <div class="p-4 space-y-2">
+                                <span class="bg-sky-100 text-sky-700 text-[9px] font-extrabold px-2 py-0.5 rounded">Teknologi</span>
+                                <h3 class="font-bold text-xs text-slate-900 leading-snug font-display">Digitalisasi di Industri Pelayaran: Peluang dan Tantangan</h3>
+                                <p class="text-[10px] text-slate-400 font-medium"><i data-lucide="clock" class="w-3 h-3 inline"></i> 06 Okt 2025</p>
+                            </div>
+                        </div>
+                        <div class="p-4 pt-0">
+                            <a href="#" onclick="showToast('Membaca artikel teknologi'); return false;" class="text-xs font-bold text-blue-600 hover:underline">Baca Selengkapnya &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=400&q=80" class="w-full h-36 object-cover" alt="Article Image">
+                            <div class="p-4 space-y-2">
+                                <span class="bg-purple-100 text-purple-700 text-[9px] font-extrabold px-2 py-0.5 rounded">Pengembangan Diri</span>
+                                <h3 class="font-bold text-xs text-slate-900 leading-snug font-display">Pentingnya Sertifikasi untuk Karier Maritim</h3>
+                                <p class="text-[10px] text-slate-400 font-medium"><i data-lucide="clock" class="w-3 h-3 inline"></i> 28 Sep 2025</p>
+                            </div>
+                        </div>
+                        <div class="p-4 pt-0">
+                            <a href="#" onclick="showToast('Membaca artikel sertifikasi'); return false;" class="text-xs font-bold text-blue-600 hover:underline">Baca Selengkapnya &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=400&q=80" class="w-full h-36 object-cover" alt="Article Image">
+                            <div class="p-4 space-y-2">
+                                <span class="bg-amber-100 text-amber-700 text-[9px] font-extrabold px-2 py-0.5 rounded">Organisasi</span>
+                                <h3 class="font-bold text-xs text-slate-900 leading-snug font-display">Peran Alumni dalam Membangun Generasi Maritim</h3>
+                                <p class="text-[10px] text-slate-400 font-medium"><i data-lucide="clock" class="w-3 h-3 inline"></i> 21 Sep 2025</p>
+                            </div>
+                        </div>
+                        <div class="p-4 pt-0">
+                            <a href="#" onclick="showToast('Membaca artikel organisasi'); return false;" class="text-xs font-bold text-blue-600 hover:underline">Baca Selengkapnya &rarr;</a>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Statistik & Peta Sebaran Alumni Global -->
+            <section class="bg-slate-100 py-12 border-t border-slate-200">
+                <div class="max-w-7xl mx-auto px-4 md:px-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                        
+                        <!-- Stats Grid Left -->
+                        <div class="lg:col-span-5 space-y-4">
+                            <div>
+                                <h2 class="text-xl font-extrabold text-slate-900 tracking-tight font-display">Statistik & Sebaran Alumni</h2>
+                                <p class="text-xs text-slate-500 font-medium">Keberhasilan kita terlihat dari sebaran alumni di berbagai perusahaan pelayaran terkemuka.</p>
+                            </div>
+
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+                                    <i data-lucide="users" class="w-5 h-5 mx-auto text-blue-600 mb-1"></i>
+                                    <p class="text-xl font-extrabold text-slate-900 font-display">2.580</p>
+                                    <p class="text-[10px] text-slate-500 font-semibold">Total Alumni</p>
+                                </div>
+
+                                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+                                    <i data-lucide="award" class="w-5 h-5 mx-auto text-amber-500 mb-1"></i>
+                                    <p class="text-xl font-extrabold text-slate-900 font-display">48</p>
+                                    <p class="text-[10px] text-slate-500 font-semibold">Tahun Berdiri</p>
+                                </div>
+
+                                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+                                    <i data-lucide="building-2" class="w-5 h-5 mx-auto text-sky-600 mb-1"></i>
+                                    <p class="text-xl font-extrabold text-slate-900 font-display">32</p>
+                                    <p class="text-[10px] text-slate-500 font-semibold">Perusahaan Pelayaran</p>
+                                </div>
+
+                                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+                                    <i data-lucide="globe-2" class="w-5 h-5 mx-auto text-emerald-600 mb-1"></i>
+                                    <p class="text-xl font-extrabold text-slate-900 font-display">18</p>
+                                    <p class="text-[10px] text-slate-500 font-semibold">Negara Tujuan</p>
+                                </div>
+
+                                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center col-span-2 sm:col-span-2">
+                                    <i data-lucide="anchor" class="w-5 h-5 mx-auto text-indigo-600 mb-1"></i>
+                                    <p class="text-xl font-extrabold text-slate-900 font-display">86%</p>
+                                    <p class="text-[10px] text-slate-500 font-semibold">Bekerja di Industri Maritim</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Global Map Right -->
+                        <div class="lg:col-span-7 bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                            <h3 class="font-bold text-xs text-slate-800 mb-3 font-display">Sebaran Alumni di Perusahaan Pelayaran Terkemuka</h3>
+                            <div class="relative bg-blue-50/50 rounded-xl overflow-hidden p-4 border border-blue-100 flex items-center justify-center min-h-[220px]">
+                                <img src="https://images.unsplash.com/photo-1589519160732-57fc498494f8?auto=format&fit=crop&w=800&q=80" class="w-full h-48 object-cover rounded-lg opacity-80" alt="World Map">
+                                <div class="absolute inset-0 bg-blue-900/10 flex items-center justify-center">
+                                    <span class="bg-navy-950/80 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center backdrop-blur-xs font-display">
+                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-400 mr-1.5 animate-bounce"></i> Live Global Sebaran Alumni
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 flex flex-wrap gap-2 text-[10px]">
+                                <span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold border border-slate-200">Pertamina International Shipping</span>
+                                <span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold border border-slate-200">MOL Indonesia</span>
+                                <span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold border border-slate-200">Wilmar Shipping</span>
+                                <span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold border border-slate-200">NYK Line</span>
+                                <span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-semibold border border-slate-200">Star Bulk Carriers</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Call to Action Banner -->
+            <section class="bg-gradient-to-r from-blue-700 via-blue-600 to-navy-900 text-white py-10">
+                <div class="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="space-y-1 text-center md:text-left">
+                        <h2 class="text-2xl font-extrabold tracking-tight font-display">Gabung Bersama Kami</h2>
+                        <p class="text-xs text-blue-100 font-medium">Jadilah bagian dari jaringan alumni maritim yang solid dan terus berkembang.</p>
+                    </div>
+                    <button onclick="openModal('modal-register')" class="px-6 py-3 bg-white text-blue-700 hover:bg-blue-50 font-extrabold text-xs rounded-xl shadow-lg transition transform hover:scale-105">
+                        Daftar Sekarang &rarr;
+                    </button>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ================================================================= -->
+        <!-- VIEW 2: ALUMNI PRIVATE DASHBOARD                                  -->
+        <!-- ================================================================= -->
+        <div id="view-alumni" class="role-view hidden bg-slate-100 py-8 min-h-screen fade-in-slide">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+                
+                <!-- Welcome & Profile Card -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 rounded-full bg-navy-900 text-amber-400 flex items-center justify-center font-bold text-xl border-2 border-amber-400 shadow-md">
+                            CR
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h1 class="text-2xl font-extrabold text-navy-900 font-display">Capt. Ridwan, M.Mar</h1>
+                                <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center gap-1">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Verified Alumni
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1 font-medium">NIM: 08.42.109 • Angkatan 42 • Ahli Nautika Tingkat I (ANT-I) • Status: Master Mariner (Active Tanker)</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="showToast('Profil diperbarui');" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">Edit Profile</button>
+                        <button onclick="openModal('modal-dues')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                            <i data-lucide="wallet" class="w-4 h-4"></i> Bayar Iuran Kas (2026)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STCW Certs & AI Match Row -->
+                <div class="grid md:grid-cols-12 gap-6">
+                    
+                    <!-- Cert STCW Status (4 cols) -->
+                    <div class="md:col-span-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                        <div class="flex items-center justify-between border-b pb-3">
+                            <h3 class="font-bold text-navy-900 text-sm font-display">STCW & Documents Status</h3>
+                            <i data-lucide="award" class="w-4 h-4 text-blue-600"></i>
+                        </div>
+                        <div class="space-y-3 text-xs">
+                            <div class="flex justify-between items-center p-2.5 rounded-xl bg-emerald-50 border border-emerald-100">
+                                <div>
+                                    <p class="font-bold text-slate-800">COC ANT-I (Master)</p>
+                                    <p class="text-[10px] text-slate-500">Dephub Certified</p>
+                                </div>
+                                <span class="text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded text-[10px]">Valid 2029</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2.5 rounded-xl bg-amber-50 border border-amber-100">
+                                <div>
+                                    <p class="font-bold text-slate-800">Advanced Fire Fighting (AFF)</p>
+                                    <p class="text-[10px] text-slate-500">Revalidation Due</p>
+                                </div>
+                                <span class="text-amber-800 font-bold bg-amber-200 px-2 py-0.5 rounded text-[10px]">Expiring 3 Mo</span>
+                            </div>
+                            <div class="flex justify-between items-center p-2.5 rounded-xl bg-emerald-50 border border-emerald-100">
+                                <div>
+                                    <p class="font-bold text-slate-800">Buku Pelaut (Seaman Book)</p>
+                                    <p class="text-[10px] text-slate-500">RI Official</p>
+                                </div>
+                                <span class="text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded text-[10px]">Active</span>
+                            </div>
+                        </div>
+                        <button onclick="showToast('Membuka portal revalidasi sertifikat');" class="w-full text-center py-2 text-xs font-bold text-blue-600 hover:underline">Upload / Perbarui Dokumen &rarr;</button>
+                    </div>
+
+                    <!-- AI Job Match Auto Recommendations (8 cols) -->
+                    <div class="md:col-span-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                        <div class="flex items-center justify-between border-b pb-3">
+                            <div>
+                                <h3 class="font-bold text-navy-900 text-sm font-display flex items-center gap-2">
+                                    <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i> AI Match Recommendations
+                                </h3>
+                                <p class="text-[11px] text-slate-500">Cocok dengan profil ANT-I & Sea Time Tanker 8 Tahun</p>
+                            </div>
+                            <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-200">2 Lowongan Cocok</span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="p-4 rounded-xl border border-slate-200 hover:border-blue-500 transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-slate-50">
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="font-bold text-sm text-navy-900 font-display">Master Mariner - LNG Carrier Tanker</h4>
+                                        <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-extrabold text-[10px]">96% Match</span>
+                                    </div>
+                                    <p class="text-xs text-slate-600">PT. SAMUDERA OCEANLINE • Gaji: USD 8,500 / Month</p>
+                                </div>
+                                <button onclick="showToast('Lamaran 1-Click terkirim ke HRD!');" class="px-4 py-2 rounded-xl bg-navy-900 hover:bg-slate-800 text-white text-xs font-bold transition shrink-0">Apply 1-Click</button>
+                            </div>
+
+                            <div class="p-4 rounded-xl border border-slate-200 hover:border-blue-500 transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-slate-50">
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="font-bold text-sm text-navy-900 font-display">Marine Superintendent (Headquarters)</h4>
+                                        <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-extrabold text-[10px]">91% Match</span>
+                                    </div>
+                                    <p class="text-xs text-slate-600">PT. PERTAMINA INTERNATIONAL SHIPPING • Jakarta Office</p>
+                                </div>
+                                <button onclick="showToast('Lamaran 1-Click terkirim ke HRD!');" class="px-4 py-2 rounded-xl bg-navy-900 hover:bg-slate-800 text-white text-xs font-bold transition shrink-0">Apply 1-Click</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Dues & Receipts Section -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+                    <h3 class="font-bold text-navy-900 text-sm mb-4 font-display flex items-center gap-2">
+                        <i data-lucide="receipt" class="w-4 h-4 text-emerald-600"></i> Status Iuran Organisasi & Kwitansi
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-4 items-center">
+                        <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                            <span class="text-xs text-emerald-700 font-semibold uppercase">Tahun 2026</span>
+                            <p class="text-xl font-extrabold text-emerald-900 mt-1 font-display">LUNAS (Rp 300.000)</p>
+                            <p class="text-[10px] text-emerald-600 mt-1">Terbayar pada 10 Jan 2026 via QRIS</p>
+                        </div>
+                        <div class="md:col-span-2 flex flex-wrap gap-3">
+                            <button onclick="downloadReceipt()" class="px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold flex items-center gap-2 transition">
+                                <i data-lucide="download" class="w-4 h-4"></i> Unduh PDF Kwitansi Pembayaran
+                            </button>
+                            <button onclick="showToast('E-Card Alumni berhasil digenerate');" class="px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold flex items-center gap-2 transition">
+                                <i data-lucide="credit-card" class="w-4 h-4"></i> Download E-Card Anggota
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- ================================================================= -->
+        <!-- VIEW 3: COMPANY PRIVATE DASHBOARD                                 -->
+        <!-- ================================================================= -->
+        <div id="view-company" class="role-view hidden bg-slate-100 py-8 min-h-screen fade-in-slide">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+                
+                <!-- Company Header Card -->
+                <div class="bg-navy-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-2xl font-extrabold font-display">PT. Oceanindo Maritime Services</h1>
+                            <span class="px-2.5 py-0.5 rounded bg-blue-500/30 text-blue-300 text-xs font-bold">Verified Company</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">NIB: 912000341882 • Manning Agency & Fleet Manager • SIUPPAK Verified</p>
+                    </div>
+                    <button onclick="openModal('modal-post-job')" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold text-xs transition flex items-center gap-2 shadow-lg">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i> Pasang Lowongan Baru
+                    </button>
+                </div>
+
+                <!-- Talent Search Filters -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                    <h3 class="font-bold text-navy-900 text-sm font-display flex items-center gap-2">
+                        <i data-lucide="search" class="w-4 h-4 text-blue-600"></i> Database Search Talent Alumni STCW
+                    </h3>
+                    <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">Tingkat Ijazah (COC)</label>
+                            <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs">
+                                <option>ANT-I (Master Mariner)</option>
+                                <option>ATT-I (Chief Engineer)</option>
+                                <option>ANT-II / ATT-II</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">Pengalaman Kapal</label>
+                            <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs">
+                                <option>LNG / Oil Tanker</option>
+                                <option>Container Carrier</option>
+                                <option>Bulk Carrier</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">Min Sea Time</label>
+                            <input type="text" placeholder="24 Bulan" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs">
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="showToast('Hasil pencarian talent diperbarui');" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition">Filter Candidates</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Applicant Management Kanban Board -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+                    <h3 class="font-bold text-navy-900 text-sm mb-4 font-display">Pipeline Pelamar Vacancy Active (Master Mariner LNG)</h3>
+                    <div class="grid md:grid-cols-4 gap-4">
+                        
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                            <div class="flex justify-between items-center text-xs font-bold text-slate-700 border-b pb-2">
+                                <span>MASUK</span>
+                                <span class="bg-slate-200 px-2 py-0.5 rounded text-[10px]">2</span>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs shadow-2xs space-y-1">
+                                <p class="font-bold text-slate-900">Capt. Ridwan, M.Mar</p>
+                                <p class="text-emerald-600 text-[10px] font-bold">96% AI Match</p>
+                                <button onclick="showToast('Pelamar dipindahkan ke Shortlist');" class="w-full mt-2 py-1 bg-blue-600 text-white text-[10px] font-bold rounded">Shortlist &rarr;</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                            <div class="flex justify-between items-center text-xs font-bold text-slate-700 border-b pb-2">
+                                <span>SHORTLISTED</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-[10px]">1</span>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs shadow-2xs space-y-1">
+                                <p class="font-bold text-slate-900">Capt. Bambang S.</p>
+                                <p class="text-blue-600 text-[10px] font-bold">94% AI Match</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                            <div class="flex justify-between items-center text-xs font-bold text-slate-700 border-b pb-2">
+                                <span>INTERVIEW</span>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-[10px]">1</span>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs shadow-2xs space-y-1">
+                                <p class="font-bold text-slate-900">Capt. Hendra W.</p>
+                                <p class="text-slate-500 text-[10px]">Schedule: Tomorrow 10:00</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                            <div class="flex justify-between items-center text-xs font-bold text-slate-700 border-b pb-2">
+                                <span>OFFERED</span>
+                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[10px]">3</span>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-200 text-xs shadow-2xs space-y-1">
+                                <p class="font-bold text-slate-900">C/E Agus Pratama</p>
+                                <p class="text-emerald-700 text-[10px] font-bold">Contract Signed</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- ================================================================= -->
+        <!-- VIEW 4: ADMIN DASHBOARD (ORGANIZATION OVERSIGHT)                   -->
+        <!-- ================================================================= -->
+        <div id="view-admin" class="role-view hidden bg-slate-100 py-8 min-h-screen fade-in-slide">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+                
+                <!-- Admin Header -->
+                <div class="bg-navy-950 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-l-4 border-blue-500">
+                    <div>
+                        <h1 class="text-2xl font-extrabold font-display flex items-center gap-2">
+                            <i data-lucide="shield-check" class="w-6 h-6 text-blue-400"></i> Platform Oversight & Control Center
+                        </h1>
+                        <p class="text-xs text-slate-400 mt-1">CABM Organization System • Backup Status: Daily Auto-Sync OK</p>
+                    </div>
+                    <button onclick="triggerSystemBackup()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold transition flex items-center gap-2 shadow">
+                        <i data-lucide="database" class="w-4 h-4"></i> Run System Backup
+                    </button>
+                </div>
+
+                <!-- Macro Stats Counters -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200">
+                        <span class="text-xs text-slate-500 font-semibold">Pending Verification</span>
+                        <div id="admin-pending-count" class="text-2xl font-black text-amber-600 font-display">2 Pending</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200">
+                        <span class="text-xs text-slate-500 font-semibold">Total Verified Alumni</span>
+                        <div class="text-2xl font-black text-navy-900 font-display">2.580 User</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200">
+                        <span class="text-xs text-slate-500 font-semibold">Saldo Kas Alumni</span>
+                        <div class="text-2xl font-black text-emerald-600 font-display">Rp 482.500.000</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200">
+                        <span class="text-xs text-slate-500 font-semibold">Lowongan Aktif</span>
+                        <div class="text-2xl font-black text-blue-600 font-display">34 Jobs</div>
+                    </div>
+                </div>
+
+                <!-- Document Verification Queue -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex justify-between items-center">
+                        <h3 class="font-bold text-navy-900 text-sm font-display">Antrean Verification Document (UU PDP Compliant)</h3>
+                        <span class="text-xs text-slate-500">Approval membuka akses penuh Dashboard</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-700">
+                            <thead class="bg-slate-50 text-slate-600 uppercase font-bold text-[10px]">
+                                <tr>
+                                    <th class="p-4">Nama Registran</th>
+                                    <th class="p-4">Role Tipe</th>
+                                    <th class="p-4">Dokumen Pendukung</th>
+                                    <th class="p-4">Tanggal Unggah</th>
+                                    <th class="p-4">Aksi Decision</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr>
+                                    <td class="p-4 font-bold">Andi Wijaya, S.T.</td>
+                                    <td class="p-4"><span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-bold">Alumni (ANT-III)</span></td>
+                                    <td class="p-4 text-blue-600 font-bold underline cursor-pointer" onclick="showToast('Membuka pratinjau Ijazah_ANT3.pdf');">Ijazah_ANT3_Andi.pdf</td>
+                                    <td class="p-4 text-slate-400">Hari ini 11:20</td>
+                                    <td class="p-4 flex gap-2">
+                                        <button onclick="approveVerification(this)" class="px-3 py-1 bg-emerald-600 text-white rounded font-bold hover:bg-emerald-700">Approve</button>
+                                        <button onclick="rejectVerification(this)" class="px-3 py-1 bg-rose-600 text-white rounded font-bold hover:bg-rose-700">Reject</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-bold">PT. Shipping Nusantara</td>
+                                    <td class="p-4"><span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-bold">Company</span></td>
+                                    <td class="p-4 text-blue-600 font-bold underline cursor-pointer" onclick="showToast('Membuka pratinjau SIUPPAK.pdf');">SIUPPAK_Nusantara.pdf</td>
+                                    <td class="p-4 text-slate-400">Kemarin 16:45</td>
+                                    <td class="p-4 flex gap-2">
+                                        <button onclick="approveVerification(this)" class="px-3 py-1 bg-emerald-600 text-white rounded font-bold hover:bg-emerald-700">Approve</button>
+                                        <button onclick="rejectVerification(this)" class="px-3 py-1 bg-rose-600 text-white rounded font-bold hover:bg-rose-700">Reject</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ================= FOOTER 5 KOLOM (PUBLIC EXPLICIT) ================= -->
+    <footer id="footer" class="bg-navy-950 text-slate-400 text-xs py-12 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-5 gap-8">
+            
+            <div class="md:col-span-2 space-y-3">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white">
+                        <i data-lucide="anchor" class="w-5 h-5"></i>
+                    </div>
+                    <span class="font-extrabold text-white text-base font-display">Maritime Alumni Network</span>
+                </div>
+                <p class="text-[11px] leading-relaxed text-slate-400 max-w-sm font-normal">
+                    Platform alumni pelayaran untuk silaturahmi, karier, pengembangan diri, berbagi ilmu, dan pengelolaan organisasi secara profesional.
+                </p>
+                <p class="text-[10px] text-slate-500 pt-2 font-medium">&copy; 2026 Maritime Alumni Network. All rights reserved.</p>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-3 font-display">Navigasi</h4>
+                <ul class="space-y-2 text-[11px]">
+                    <li><a href="#" onclick="switchRole('public'); return false;" class="hover:text-white transition">Beranda</a></li>
+                    <li><a href="#" class="hover:text-white transition">Tentang Kami</a></li>
+                    <li><a href="#" onclick="switchRole('alumni'); return false;" class="hover:text-white transition">Alumni</a></li>
+                    <li><a href="#" class="hover:text-white transition">Komunitas</a></li>
+                    <li><a href="#" onclick="switchRole('company'); return false;" class="hover:text-white transition">Karier</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-3 font-display">Informasi</h4>
+                <ul class="space-y-2 text-[11px]">
+                    <li><a href="#berita-section" class="hover:text-white transition">Berita & Pengumuman</a></li>
+                    <li><a href="#pengumuman-section" class="hover:text-white transition">Kegiatan & Reuni</a></li>
+                    <li><a href="#knowledge-section" class="hover:text-white transition">Knowledge Sharing</a></li>
+                    <li><a href="#" class="hover:text-white transition">Donasi & Beasiswa</a></li>
+                    <li><a href="#" class="hover:text-white transition">Kontak</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-3 font-display">Ikuti Kami</h4>
+                <div class="flex space-x-2 mb-4">
+                    <a href="#" class="w-8 h-8 rounded-lg bg-navy-800 hover:bg-blue-600 flex items-center justify-center text-white transition"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-navy-800 hover:bg-blue-600 flex items-center justify-center text-white transition"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-navy-800 hover:bg-blue-600 flex items-center justify-center text-white transition"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-navy-800 hover:bg-blue-600 flex items-center justify-center text-white transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                </div>
+                <p class="text-[11px] text-slate-400 font-medium"><i data-lucide="mail" class="w-3.5 h-3.5 inline mr-1 text-blue-400"></i> info@maritimealumni.id</p>
+                <p class="text-[11px] text-slate-400 mt-1 font-medium"><i data-lucide="map-pin" class="w-3.5 h-3.5 inline mr-1 text-blue-400"></i> Indonesia</p>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE AI CHATBOT WINDOW -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <div id="chatWindow" class="bg-white rounded-2xl shadow-2xl border border-slate-200 mb-3 w-80 md:w-96 overflow-hidden hidden transition-all duration-300 fade-in-slide">
+            <div class="bg-gradient-to-r from-navy-950 to-blue-900 p-4 text-white flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white shadow">
+                        <i data-lucide="bot" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs text-white font-display">Maritime AI Assistant</h4>
+                        <p class="text-[10px] text-blue-200 font-medium">Online • Terverifikasi</p>
+                    </div>
+                </div>
+                <button onclick="toggleChatWindow()" class="text-slate-300 hover:text-white p-1"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+
+            <div id="chatMessages" class="p-4 h-64 overflow-y-auto space-y-3 bg-slate-50 text-xs custom-scrollbar">
+                <div class="flex items-start space-x-2">
+                    <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0">AI</div>
+                    <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200 shadow-xs max-w-[85%] text-slate-700 font-medium">
+                        Halo Capt/Rekan Alumni! 👋 Ada yang bisa kami bantu terkait verifikasi alumni, lowongan, atau kas alumni?
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-2 bg-slate-100 border-t border-slate-200 flex space-x-1.5 overflow-x-auto text-[10px]">
+                <button onclick="sendQuickMessage('Bagaimana cara verifikasi akun?')" class="px-2.5 py-1 bg-white border border-slate-300 rounded-full font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 shrink-0">Verifikasi Akun</button>
+                <button onclick="sendQuickMessage('Info Reuni 2025')" class="px-2.5 py-1 bg-white border border-slate-300 rounded-full font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 shrink-0">Reuni 2025</button>
+                <button onclick="sendQuickMessage('Bantuan Kas Alumni')" class="px-2.5 py-1 bg-white border border-slate-300 rounded-full font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 shrink-0">Kas Alumni</button>
+            </div>
+
+            <form onsubmit="handleSendChat(event)" class="p-2.5 bg-white border-t border-slate-200 flex items-center space-x-2">
+                <input type="text" id="chatInput" placeholder="Ketik pesan Anda..." class="flex-1 text-xs border border-slate-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                <button type="submit" class="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition shrink-0">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+            </form>
+        </div>
+
+        <button onclick="toggleChatWindow()" class="w-13 h-13 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-2xl flex items-center justify-center transition transform hover:scale-105 active:scale-95 group border-2 border-white">
+            <i data-lucide="message-square" class="w-6 h-6 group-hover:rotate-12 transition duration-300"></i>
+        </button>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-24 right-6 z-50 bg-navy-950 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-2xl border border-blue-500/40 hidden items-center space-x-2 fade-in-slide">
+        <i data-lucide="check-circle" class="w-4 h-4 text-blue-400"></i>
+        <span id="toastMsg">Menu Diklik!</span>
+    </div>
+
+    <!-- MODAL REGISTER -->
+    <div id="modal-register" class="fixed inset-0 bg-navy-950/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('modal-register')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-lg font-bold text-navy-900 mb-1 font-display">Registrasi Gateway Alumni & Perusahaan</h3>
+            <p class="text-xs text-slate-500 mb-4">Verifikasi dokumen diperlukan sebelum membuka akses private dashboard.</p>
+            <form onsubmit="handleRegisterSubmit(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Daftar Sebagai</label>
+                    <select id="regType" class="w-full border border-slate-300 rounded-xl p-2.5 bg-slate-50 font-semibold">
+                        <option value="alumni">Alumni Pelayaran (Ijazah / Buku Pelaut)</option>
+                        <option value="company">Perusahaan Pelayaran (SIUPPAK / NIB)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Nama Lengkap / Nama PT</label>
+                    <input type="text" required placeholder="Capt. Ridwan / PT. Shipping" class="w-full border border-slate-300 rounded-xl p-2.5">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Email Resmi</label>
+                    <input type="email" required placeholder="email@maritime.id" class="w-full border border-slate-300 rounded-xl p-2.5">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Unggah Dokumen Legalitas (PDF/JPG)</label>
+                    <input type="file" required class="w-full border border-slate-300 rounded-xl p-2 bg-slate-50">
+                </div>
+                <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition">Kirim Berkas Verifikasi</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL LOGIN -->
+    <div id="modal-login" class="fixed inset-0 bg-navy-950/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('modal-login')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-lg font-bold text-navy-900 mb-1 font-display">Login Portal</h3>
+            <p class="text-xs text-slate-500 mb-4">Masuk ke ecosystem private dashboard.</p>
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Email / NIM</label>
+                    <input type="text" required placeholder="ridwan@alumni.id" class="w-full border border-slate-300 rounded-xl p-2.5">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Password</label>
+                    <input type="password" required placeholder="••••••••" class="w-full border border-slate-300 rounded-xl p-2.5">
+                </div>
+                <button type="submit" class="w-full py-3 bg-navy-900 hover:bg-slate-800 text-white font-bold rounded-xl transition">Masuk Akun</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL POST VACANCY (COMPANY) -->
+    <div id="modal-post-job" class="fixed inset-0 bg-navy-950/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('modal-post-job')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-lg font-bold text-navy-900 mb-1 font-display">Pasang Lowongan Perwira</h3>
+            <form onsubmit="handlePostJobSubmit(event)" class="space-y-3 text-xs mt-3">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Judul Posisi</label>
+                    <input type="text" required placeholder="Master Mariner / Chief Engineer" class="w-full border border-slate-300 rounded-xl p-2.5">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Kualifikasi COC STCW</label>
+                    <select class="w-full border border-slate-300 rounded-xl p-2.5">
+                        <option>ANT-I</option>
+                        <option>ATT-I</option>
+                        <option>ANT-II / ATT-II</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Penawaran Gaji (USD / IDR)</label>
+                    <input type="text" required placeholder="USD 8,500 / Month" class="w-full border border-slate-300 rounded-xl p-2.5">
+                </div>
+                <button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl transition">Publikasikan Lowongan AI</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL QRIS DUES (ALUMNI) -->
+    <div id="modal-dues" class="fixed inset-0 bg-navy-950/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center space-y-3">
+            <button onclick="closeModal('modal-dues')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-lg font-bold text-navy-900 font-display">Bayar Iuran Kas Alumni</h3>
+            <p class="text-xs text-slate-500">Scan QRIS untuk pembayaran Iuran 2026 sebesar <strong>Rp 300.000</strong></p>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 inline-block">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=CABM_DUES_2026" alt="QRIS" class="w-36 h-36 mx-auto">
+            </div>
+            <button onclick="confirmPayment()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition">Konfirmasi Pembayaran</button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC ENGINE -->
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        let currentRole = 'public';
+
+        // Dynamic Role Switching & Header Nav Sync
+        function switchRole(role) {
+            currentRole = role;
+
+            // Hide all role views
+            document.querySelectorAll('.role-view').forEach(v => v.classList.add('hidden'));
+
+            // Show active role view
+            const activeView = document.getElementById(`view-${role}`);
+            if (activeView) activeView.classList.remove('hidden');
+
+            // Update top bar switcher active button styling
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.className = "role-btn px-3 py-1 rounded-lg bg-white/40 hover:bg-white/70 text-slate-900 transition";
+            });
+            const activeRoleBtn = document.getElementById(`btn-role-${role}`);
+            if (activeRoleBtn) activeRoleBtn.className = "role-btn px-3 py-1 rounded-lg bg-slate-950 text-white shadow transition";
+
+            // Render Dynamic Navbar
+            renderDynamicNavbar();
+            showToast(`Mode Peran: ${role.toUpperCase()}`);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderDynamicNavbar() {
+            const navLinks = document.getElementById('nav-links');
+            const navActions = document.getElementById('nav-actions');
+
+            if (currentRole === 'public') {
+                navLinks.innerHTML = `
+                    <a href="#" onclick="switchRole('public'); return false;" class="text-blue-600 border-b-2 border-blue-600 pb-1">Beranda</a>
+                    <a href="#" onclick="showToast('Tentang Kami'); return false;" class="hover:text-blue-600 transition">Tentang Kami</a>
+                    <a href="#" onclick="switchRole('alumni'); return false;" class="hover:text-blue-600 transition">Alumni</a>
+                    <a href="#" onclick="showToast('Komunitas'); return false;" class="hover:text-blue-600 transition">Komunitas</a>
+                    <a href="#" onclick="switchRole('company'); return false;" class="hover:text-blue-600 transition">Karier</a>
+                    <a href="#berita-section" class="hover:text-blue-600 transition">Info & Berita</a>
+                    <a href="#pengumuman-section" class="hover:text-blue-600 transition">Kegiatan</a>
+                    <a href="#footer" class="hover:text-blue-600 transition">Kontak</a>
+                `;
+                navActions.innerHTML = `
+                    <button onclick="openModal('modal-login')" class="hidden sm:inline-flex px-4 py-2 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition border border-blue-200">Login</button>
+                    <button onclick="openModal('modal-register')" class="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition">Daftar</button>
+                `;
+            } else if (currentRole === 'alumni') {
+                navLinks.innerHTML = `
+                    <a href="#" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1">Ringkasan</a>
+                    <a href="#" onclick="showToast('Profil & STCW Certs'); return false;" class="hover:text-blue-600 transition">Profil & Sertifikat</a>
+                    <a href="#" onclick="showToast('AI Job Matching Engine'); return false;" class="hover:text-blue-600 transition">AI Job Match</a>
+                    <a href="#" onclick="showToast('Status Lamaran Work'); return false;" class="hover:text-blue-600 transition">Status Lamaran</a>
+                    <a href="#" onclick="showToast('Kas & Iuran Alumni'); return false;" class="hover:text-blue-600 transition">Kas & Iuran</a>
+                `;
+                navActions.innerHTML = `
+                    <div class="flex items-center space-x-2 border-l border-slate-200 pl-3">
+                        <div class="w-8 h-8 rounded-full bg-navy-900 text-amber-400 flex items-center justify-center font-bold text-xs border border-amber-400">CR</div>
+                        <span class="text-xs font-bold text-slate-800">Capt. Ridwan</span>
+                    </div>
+                `;
+            } else if (currentRole === 'company') {
+                navLinks.innerHTML = `
+                    <a href="#" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1">Ringkasan</a>
+                    <a href="#" onclick="openModal('modal-post-job')" class="hover:text-blue-600 transition">Pasang Lowongan</a>
+                    <a href="#" onclick="showToast('Search Database Talent'); return false;" class="hover:text-blue-600 transition">Cari Talent</a>
+                    <a href="#" onclick="showToast('Kanban Candidate Board'); return false;" class="hover:text-blue-600 transition">Kelola Pelamar</a>
+                `;
+                navActions.innerHTML = `
+                    <div class="flex items-center space-x-2 border-l border-slate-200 pl-3">
+                        <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs"><i data-lucide="building" class="w-4 h-4"></i></div>
+                        <span class="text-xs font-bold text-slate-800">PT. Oceanindo</span>
+                    </div>
+                `;
+            } else if (currentRole === 'admin') {
+                navLinks.innerHTML = `
+                    <a href="#" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1">Overview System</a>
+                    <a href="#" onclick="showToast('Verifikasi Berkas'); return false;" class="hover:text-blue-600 transition">Verifikasi Dokumen</a>
+                    <a href="#" onclick="showToast('CMS Konten'); return false;" class="hover:text-blue-600 transition">Kelola Konten</a>
+                    <a href="#" onclick="showToast('Ledger Keuangan'); return false;" class="hover:text-blue-600 transition">Keuangan Kas</a>
+                `;
+                navActions.innerHTML = `
+                    <div class="flex items-center space-x-2 border-l border-slate-200 pl-3">
+                        <span class="px-2.5 py-1 rounded-full bg-slate-900 text-amber-400 text-xs font-extrabold flex items-center gap-1"><i data-lucide="shield" class="w-3.5 h-3.5"></i> Admin System</span>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // News Slider Data & Functions
+        const newsData = [
+            {
+                tag: "BERITA TERKINI",
+                title: "Alumni Pelayaran Indonesia Tunjukkan Peran Strategis di Industri Global",
+                desc: "Kisah inspiratif para alumni yang kini berkarier di perusahaan pelayaran terkemuka dunia, membuktikan bahwa pendidikan maritim membuka banyak peluang.",
+                img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                tag: "INFO KARIR",
+                title: "Peluang Rekrutmen Perwira Kapal Tanker & Bulk Carrier 2026",
+                desc: "Sejumlah perusahaan pelayaran internasional membuka kesempatan bagi alumni angkatan 2010-2022 untuk posisi Chief Officer dan Master Mariner.",
+                img: "https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                tag: "EVENT MARITIM",
+                title: "Simposia Teknologi Kemaritiman dan Keselamatan Pelayaran",
+                desc: "Menghadirkan narasumber dari pakar maritim internasional untuk membahas regulasi IMO terbaru dan teknologi kapal ramah lingkungan.",
+                img: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+        let currentNewsIndex = 0;
+
+        function updateNewsSlide() {
+            const container = document.getElementById('newsContentContainer');
+            if (!container) return;
+            container.classList.remove('fade-in-slide');
+            void container.offsetWidth;
+            container.classList.add('fade-in-slide');
+
+            const item = newsData[currentNewsIndex];
+            document.getElementById('newsSliderImg').src = item.img;
+            document.getElementById('newsTag').innerText = item.tag;
+            document.getElementById('newsTitle').innerText = item.title;
+            document.getElementById('newsDesc').innerText = item.desc;
+
+            for (let i = 0; i < 3; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                if (dot) dot.className = i === currentNewsIndex ? "w-2 h-2 rounded-full bg-blue-500 cursor-pointer transition-all" : "w-2 h-2 rounded-full bg-white/40 cursor-pointer transition-all";
+            }
+        }
+        function nextNewsSlide() { currentNewsIndex = (currentNewsIndex + 1) % newsData.length; updateNewsSlide(); }
+        function prevNewsSlide() { currentNewsIndex = (currentNewsIndex - 1 + newsData.length) % newsData.length; updateNewsSlide(); }
+        function setNewsSlide(idx) { currentNewsIndex = idx; updateNewsSlide(); }
+        setInterval(nextNewsSlide, 5000);
+
+        // Toast & Interaction Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+            setTimeout(() => { toast.classList.add('hidden'); toast.classList.remove('flex'); }, 2200);
+        }
+
+        function clickImportantMenu(el, menuName) {
+            el.classList.add('menu-active-anim');
+            setTimeout(() => el.classList.remove('menu-active-anim'), 600);
+            showToast(`Membuka: ${menuName}`);
+        }
+
+        function animateMenuItem(el) {
+            showToast(`Menuju: ${el.innerText}`);
+        }
+
+        // Modals & Forms
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function handleRegisterSubmit(e) {
+            e.preventDefault();
+            closeModal('modal-register');
+            showToast('Pendaftaran Terkirim! Status: Pending Verification Admin.');
+            switchRole('admin');
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            closeModal('modal-login');
+            showToast('Login Berhasil! Mengalihkan ke Dashboard Alumni...');
+            switchRole('alumni');
+        }
+
+        function handlePostJobSubmit(e) {
+            e.preventDefault();
+            closeModal('modal-post-job');
+            showToast('Lowongan Berhasil Dipublikasikan!');
+        }
+
+        function confirmPayment() {
+            closeModal('modal-dues');
+            showToast('Pembayaran Iuran Dikonfirmasi!');
+        }
+
+        function downloadReceipt() {
+            showToast('Downloading Kwitansi_Iuran_2026.pdf...');
+        }
+
+        function approveVerification(btn) {
+            btn.closest('tr').style.backgroundColor = '#f0fdf4';
+            btn.parentElement.innerHTML = '<span class="text-emerald-700 font-bold">APPROVED ✓</span>';
+            document.getElementById('admin-pending-count').innerText = "1 Pending";
+            showToast('Dokumen Diterima (Verified)');
+        }
+
+        function rejectVerification(btn) {
+            btn.closest('tr').style.backgroundColor = '#fef2f2';
+            btn.parentElement.innerHTML = '<span class="text-rose-700 font-bold">REJECTED ✕</span>';
+            document.getElementById('admin-pending-count').innerText = "1 Pending";
+            showToast('Dokumen Ditolak');
+        }
+
+        function triggerSystemBackup() {
+            showToast('Running System Backup... Completed!');
+        }
+
+        // Chatbot Logic
+        function toggleChatWindow() { document.getElementById('chatWindow').classList.toggle('hidden'); }
+        function handleSendChat(e) {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const txt = input.value.trim();
+            if (!txt) return;
+
+            const msgs = document.getElementById('chatMessages');
+            msgs.innerHTML += `<div class="flex items-start justify-end space-x-2"><div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none shadow-xs max-w-[85%] text-xs font-medium">${txt}</div></div>`;
+            input.value = '';
+            msgs.scrollTop = msgs.scrollHeight;
+
+            setTimeout(() => {
+                let botReply = "Terima kasih atas pertanyaannya. Tim pengurus alumni akan segera membantu Anda!";
+                if (txt.toLowerCase().includes('verifikasi')) botReply = "Verifikasi dokumen ijazah/SIUPPAK dapat diproses di menu Dashboard Admin.";
+                else if (txt.toLowerCase().includes('reuni')) botReply = "Reuni Akbar 2025 diselenggarakan 15 November 2025 di Grand Marina Jakarta.";
+                
+                msgs.innerHTML += `<div class="flex items-start space-x-2 fade-in-slide"><div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0">AI</div><div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200 shadow-xs max-w-[85%] text-slate-700 font-medium">${botReply}</div></div>`;
+                msgs.scrollTop = msgs.scrollHeight;
+            }, 600);
+        }
+        function sendQuickMessage(txt) { document.getElementById('chatInput').value = txt; handleSendChat(new Event('submit')); }
+
+        // Initialize default view
+        renderDynamicNavbar();
+    </script>
+</body>
+</html>
